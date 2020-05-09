@@ -1,28 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Календарь задач</h1>
+    <TableHead />
+    <TableBody />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import TableHead from '@/components/TableHead.vue';
+import TableBody from '@/components/TableBody.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    TableHead,
+    TableBody,
   },
 };
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="sass">
+@import './sass/reset'
+body, html, #app
+  width: 100%
+  height: 100%
+#app
+  font-family: Avenir, Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  color: #2c3e50
+  width: 80%
+  max-width: 1140px
+  margin: 60px auto
+  h1
+    font-size: 2em
+    text-align: center
+    margin-bottom: 30px
 </style>

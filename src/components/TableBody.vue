@@ -9,10 +9,11 @@
     <div class="table__body-day" v-for="(date, index) in getDates" :key="index">
       <div class="events" v-for="task in getTasks" :key="task.title">
         <div class="event" v-if="isSameDate(date, task.startDate)"
-        :style="{'top': getTop(task.startDate) + 'px'}">
-        {{getTop(task.startDate)}}
-          {{task.title}} {{task.startDate.format('DD.MM.YYYY HH:mm')}}
-          {{moment(date).format('DD.MM.YYYY HH:mm')}}
+        :style="{
+          'top': getTop(task.startDate) + 'px',
+          height: getHeight(task.startDate, task.endDate) + 'px'
+        }" v-dragscroll v-on:dragscrollmove="startDrag($event)">
+          {{task.title}}
         </div>
       </div>
       <div class="hour" v-for="(t, i) in getTimes" :key="i" :style="styleHour">
@@ -35,17 +36,6 @@ export default {
     };
   },
   computed: mapGetters(['getTasks', 'getDates', 'getTimes']),
-  /* {
-    getTasks() {
-      return this.$store.getters.getTasks;
-    },
-    getDates() {
-      return this.$store.getters.getDates;
-    },
-    getTimes() {
-      return this.$store.getters.getTimes;
-    },
-  }, */
   methods: {
     fetchTasks() {
       this.$store.dispatch('fetchTasks');
@@ -61,10 +51,16 @@ export default {
       const m = parseInt(time.format('m'), 0);
       return h * 60 + m;
     },
+    getHeight(start, end) {
+      return end.diff(start, 'minutes');
+    },
     isSameDate(day, start) {
       return this.moment(day).isSame(start, 'day');
     },
-  }, // mapActions(['fetchTasks', 'generateDates', 'generateTimes']),
+    startDrag(evt) {
+      console.log(evt);
+    },
+  },
   mounted() {
     this.generateDates();
     this.generateTimes();
@@ -104,6 +100,10 @@ export default {
       width: 100%
       overflow: hidden
       background-color: lightgreen
+      opacity: .6
+      padding: 5px
+      font-size: .9rem
+      cursor: move
   div.table__body-day, div.table__body-time
     width: 100%
 </style>

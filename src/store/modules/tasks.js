@@ -2,6 +2,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 export default {
+  strict: true,
   state: {
     tasks: [],
   },
@@ -10,7 +11,6 @@ export default {
       state.tasks = tasks;
     },
     updateOne(state, payload) {
-      console.log('payload', payload);
       state.tasks[payload.index] = payload.task;
     },
   },
@@ -29,13 +29,18 @@ export default {
         ctx.commit('updateTasks', tasks);
       }
     },
-    taskUpY({ commit, state }, payload) {
-      const newTime = state.tasks[payload.index].startDate.add(payload.y, 'minutes');
-      commit('updateOne', { index: payload.index, task: { ...state.tasks[payload.index], startDate: newTime } });
-    },
-    taskDownY({ commit, state }, payload) {
-      const newTime = state.tasks[payload.index].startDate.subtract(payload.y, 'minutes');
-      commit('updateOne', { index: payload.index, task: { ...state.tasks[payload.index], startDate: newTime } });
+    taskMove({ commit, state }, payload) {
+      const newStartTime = state.tasks[payload.index].startDate.add(-payload.y, 'minutes');
+      const newEndTime = state.tasks[payload.index].endDate.add(-payload.y, 'minutes');
+      console.log('taskUp payload.y', payload.y);
+      commit('updateOne', {
+        index: payload.index,
+        task: {
+          ...state.tasks[payload.index],
+          startDate: newStartTime,
+          endDate: newEndTime,
+        },
+      });
     },
   },
   getters: {

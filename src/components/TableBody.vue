@@ -3,18 +3,21 @@
   <div class="table__body">
     <TableBodyTime :times="getTimes"/>
     <div class="table__body-day" v-for="date in getDates" :key="moment(date).format('D')">
-      <div class="events" v-for="(task, indexTask) in getTasks" :key="indexTask">
-        <div class="event" v-if="isSameDate(date, task.startDate)"
+      <div class="events" v-for="(task, indexTask) in getTasks"
+        :key="task.startDate.format('DDHHmm')">
+        <div class="event" v-if="isSameDate(date, task.startDate)" draggable
         :style="{
           'top': getTop(task.startDate) + 'px',
           height: getHeight(task.startDate, task.endDate) + 'px'
-        }" v-dragscroll v-on:dragscrollmove="startDrag($event, indexTask)">
+        }"  @dragstart="startDrag($event, indexTask)"
+            @dragend="stopDrag($event, indexTask)">
           {{task.title}}
         </div>
       </div>
       <div class="hour" v-for="t in getTimes" :key="t.format('HH:mm')"></div>
     </div>
   </div>
+  {{getTasks}}
 </div>
 </template>
 
@@ -49,15 +52,14 @@ export default {
       return this.moment(day).isSame(start, 'day');
     },
     startDrag(evt, index) {
-      // const x = evt.detail.deltaX;
-      const y = Number(evt.detail.deltaY) * 10;
-      if (y < 0) {
-        console.log('taskUp');
-        this.$store.dispatch('taskUpY', { index, y });
-      } else if (y > 0) {
-        console.log('taskDown');
-        this.$store.dispatch('taskDownY', { index, y });
-      }
+      // const { x, y } = evt;
+      console.log(index, 'evt start', evt);
+      // console.log(index, 'evt.start', x, y);
+      // this.$store.dispatch('taskMove', { index, y });// .then(() => this.$forceUpdate());
+    },
+    stopDrag(evt, index) {
+      // const { x, y } = evt;
+      console.log(index, 'evt stop', evt);
     },
   },
   mounted() {

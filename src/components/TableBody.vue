@@ -1,24 +1,18 @@
 <template>
-<div :style="styleWrap">
+<div class="styleWrap">
   <div class="table__body">
-    <div class="table__body-time">
-      <div class="hour" v-for="(t, i) in getTimes" :key="i" :style="styleHour">
-        <p>{{t.format('HH:mm')}}</p>
-      </div>
-    </div>
-    <div class="table__body-day" v-for="(date, index) in getDates" :key="index">
-      <div class="events" v-for="task in getTasks" :key="task.title">
+    <TableBodyTime :times="getTimes"/>
+    <div class="table__body-day" v-for="date in getDates" :key="moment(date).format('D')">
+      <div class="events" v-for="(task, indexTask) in getTasks" :key="indexTask">
         <div class="event" v-if="isSameDate(date, task.startDate)"
         :style="{
           'top': getTop(task.startDate) + 'px',
           height: getHeight(task.startDate, task.endDate) + 'px'
-        }" v-dragscroll v-on:dragscrollmove="startDrag($event)">
+        }" v-dragscroll v-on:dragscrollmove="startDrag($event, indexTask)">
           {{task.title}}
         </div>
       </div>
-      <div class="hour" v-for="(t, i) in getTimes" :key="i" :style="styleHour">
-        {{t.format('HH:mm')}}
-      </div>
+      <div class="hour" v-for="t in getTimes" :key="t.format('HH:mm')"></div>
     </div>
   </div>
 </div>
@@ -26,14 +20,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import TableBodyTime from './TableBodyTime.vue';
 
 export default {
-  data() {
-    return {
-      hours: 24,
-      styleHour: { height: '60px' },
-      styleWrap: { overflowY: 'scroll', height: '600px', paddingTop: '15px' },
-    };
+  components: {
+    TableBodyTime,
   },
   computed: mapGetters(['getTasks', 'getDates', 'getTimes']),
   methods: {
@@ -57,8 +48,16 @@ export default {
     isSameDate(day, start) {
       return this.moment(day).isSame(start, 'day');
     },
-    startDrag(evt) {
-      console.log(evt);
+    startDrag(evt, index) {
+      // const x = evt.detail.deltaX;
+      const y = Number(evt.detail.deltaY) * 10;
+      if (y < 0) {
+        console.log('taskUp');
+        this.$store.dispatch('taskUpY', { index, y });
+      } else if (y > 0) {
+        console.log('taskDown');
+        this.$store.dispatch('taskDownY', { index, y });
+      }
     },
   },
   mounted() {
@@ -70,31 +69,22 @@ export default {
 </script>
 
 <style lang="sass">
+.styleWrap
+  overflow-y: scroll
+  height: 600px
+  padding-top: 15px
 .table__body
   display: flex
   flex-direction: row
   justify-content: space-between
   height: 600px
-  div.table__body-time
-    .hour
-      text-align: right
-      &:last-child:after
-        display: block
-        position: relative
-        bottom: -30px
-        right: 15px
-        content: '00:00'
-      p
-        right: 15px
-        display: inline-block
-        position: relative
-        top: -10px
   div.table__body-day
     position: relative
     .hour
       border-bottom: 1px solid #eee
       border-right: 1px solid #eee
       color: #f2f2f2
+      height: 60px
     .event
       position: absolute
       width: 100%

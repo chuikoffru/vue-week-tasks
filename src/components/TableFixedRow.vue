@@ -1,7 +1,7 @@
 <template>
 <div class="table__fixed">
   <div><p>GMT {{moment().format("Z")}}</p></div>
-  <div v-for="item in dates" v-bind:key="item.day">
+  <div v-for="item in dates" v-bind:key="item.day()">
    <p class="warning">Non-Working Day (COVID-19)</p>
   </div>
 </div>

@@ -20,7 +20,7 @@ export default {
       const days = [];
       let day = startOfWeek;
       while (day <= endOfWeek) {
-        days.push(day.toDate());
+        days.push(day);
         day = day.clone().add(1, 'd');
       }
       ctx.commit('updateDates', days);

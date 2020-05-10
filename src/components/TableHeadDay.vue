@@ -1,8 +1,8 @@
 <template>
 <div class="table__head">
   <div></div>
-  <div v-for="item in dates" v-bind:key="item.day">
-    <b>{{ moment(item).format('D') }}</b> <br/> {{ moment(item).format('ddd') }}
+  <div v-for="item in dates" v-bind:key="item.day()">
+    <b>{{ item.format('D') }}</b> <br/> {{ item.format('ddd') }}
   </div>
 </div>
 </template>

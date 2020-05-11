@@ -1,7 +1,8 @@
 <template>
 <div class="table__head">
   <div></div>
-  <div v-for="item in dates" v-bind:key="item.day()">
+  <div v-for="item in dates" v-bind:key="item.day()"
+    :class="{active: item.format('D') === moment().format('D')}">
     <b>{{ item.format('D') }}</b> <br/> {{ item.format('ddd') }}
   </div>
 </div>
@@ -28,4 +29,6 @@ export default {
       margin-right: 15px
     b
       font-size: 1.7em
+    &.active
+      color: red
 </style>

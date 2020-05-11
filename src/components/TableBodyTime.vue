@@ -1,6 +1,7 @@
 <template>
   <div class="table__body-time">
-      <div class="hour" v-for="(t, i) in times" :key="i">
+      <div class="hour" v-for="(t, i) in times" :key="i"
+        :class="{active: t.format('H') === moment().format('H')}">
         <p>{{t.format('HH:mm')}}</p>
       </div>
     </div>
@@ -28,4 +29,6 @@ div.table__body-time
       display: inline-block
       position: relative
       top: -10px
+    &.active
+      color: red
 </style>

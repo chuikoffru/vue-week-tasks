@@ -25,20 +25,22 @@ export default {
           height: moment.unix(item.endDate).diff(moment.unix(item.startDate), 'minutes'),
           top: (parseInt(moment.unix(item.startDate).format('H'), 0) * 60)
           + parseInt(moment.unix(item.startDate).format('m'), 0),
+          key: item.startDate + item.endDate,
         }));
         ctx.commit('updateTasks', tasks);
       }
     },
     taskMove({ commit, state }, payload) {
-      const newStartTime = state.tasks[payload.index].startDate.add(-payload.y, 'minutes');
-      const newEndTime = state.tasks[payload.index].endDate.add(-payload.y, 'minutes');
-      console.log('taskUp payload.y', payload.y);
+      console.log('payload', payload);
+      const { startDate, endDate } = state.tasks[payload.index];
+      startDate.add(-payload.y, 'minutes');
+      endDate.add(-payload.y, 'minutes');
       commit('updateOne', {
         index: payload.index,
         task: {
           ...state.tasks[payload.index],
-          startDate: newStartTime,
-          endDate: newEndTime,
+          startDate,
+          endDate,
         },
       });
     },

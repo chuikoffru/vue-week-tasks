@@ -31,6 +31,8 @@ export default {
     &:last-child
       margin-right: 15px
     .warning
+      opacity: 0.8
+      width: 95%
       padding: 3px
       overflow: hidden
       background-color: orange

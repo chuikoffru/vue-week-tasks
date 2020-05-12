@@ -5,8 +5,8 @@
           class="event"
           v-if="isSameDate(date, task.startDate)"
           :style="{
-            'top': getTop(task.startDate) + 'px',
-            height: getHeight(task.startDate, task.endDate) + 'px'
+            'top': task.top,
+            'height': task.height
           }"
           @selectstart.prevent
           @mousedown="startDrag($event, indexTask)"
@@ -14,8 +14,9 @@
           @mousemove="moveDrag($event, indexTask)"
           @mousewheel.prevent="wheelMove($event, indexTask)"
           >
-          {{task.startDate.format('HH:mm')}}
-          {{task.title}}
+          <div class="time">{{task.startDate.format('HH:mm')}}</div>
+          <div class="text">{{task.title}}</div>
+          <div class="size" @mousedown.stop="reduceTime($event, indexTask)"></div>
         </div>
       </div>
   </div>
@@ -30,14 +31,6 @@ export default {
     dragging: false,
   }),
   methods: {
-    getTop(time) {
-      const h = parseInt(time.format('H'), 0);
-      const m = parseInt(time.format('m'), 0);
-      return h * 60 + m;
-    },
-    getHeight(start, end) {
-      return end.diff(start, 'minutes');
-    },
     isSameDate(day, start) {
       return this.moment(day).isSame(start, 'day');
     },
@@ -45,23 +38,28 @@ export default {
       this.dragging = true;
       this.x = evt.offsetX;
       this.y = evt.offsetY;
+      console.log('START');
     },
     stopDrag() {
       this.dragging = false;
       this.x = 0;
       this.y = 0;
+      console.log('STOP');
     },
     moveDrag(evt, index) {
       if (this.dragging) {
         const x = this.x - evt.offsetX;
         const y = this.y - evt.offsetY;
-        if (!(y % 15)) {
-          this.$store.dispatch('taskMove', { index, y, x }).then(() => this.$forceUpdate());
+        if (x !== 0 && y !== 0) {
+          this.$store.dispatch('taskMove', { index, y, x });
         }
       }
     },
     wheelMove(evt, index) {
-      this.$store.dispatch('taskMove', { index, y: -evt.deltaY }).then(() => this.$forceUpdate());
+      this.$store.dispatch('taskMove', { index, y: -evt.deltaY });
+    },
+    reduceTime(evt, index) {
+      console.log('evt, index', evt, index);
     },
   },
 };
@@ -80,8 +78,24 @@ export default {
     width: 100%
     overflow: hidden
     background-color: lightgreen
-    opacity: .6
+    opacity: .7
     padding: 5px
-    font-size: .9rem
+    font-size: .8rem
     cursor: move
+    color: black
+    display: flex
+    flex-direction: column
+    .time
+      color: green
+      font-size: .7rem
+      margin-bottom: 5px
+    .text
+      flex: 1 0 auto
+    .size
+      width: 100%
+      height: 5px
+      background-color: green
+      flex: 0 0 auto
+      cursor: row-resize
+      opacity: .2
 </style>

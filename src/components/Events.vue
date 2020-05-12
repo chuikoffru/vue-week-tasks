@@ -8,6 +8,7 @@
             'top': task.top,
             'height': task.height
           }"
+          draggable="true"
           @dragover.prevent
           @dragstart="startDrag($event, indexTask)"
           @dragend.prevent="stopDrag($event, indexTask)"

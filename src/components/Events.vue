@@ -8,7 +8,6 @@
             'top': task.top,
             'height': task.height
           }"
-          draggable="dragging"
           @dragover.prevent
           @dragstart="startDrag($event, indexTask)"
           @dragend.prevent="stopDrag($event, indexTask)"
@@ -21,12 +20,12 @@
 </template>
 
 <script>
+/* eslint-disable no-param-reassign */
 export default {
   props: ['getTasks', 'date'],
   data: () => ({
     y: 0,
     x: 0,
-    dragging: false,
   }),
   methods: {
     isSameDate(day, start) {

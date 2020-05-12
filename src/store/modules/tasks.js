@@ -32,7 +32,6 @@ export default {
       }
     },
     taskMove({ commit, state, dispatch }, payload) {
-      console.log('payload', payload);
       // Получаем данные задачи
       const { startDate, endDate } = state.tasks[payload.index];
       // Получаем текущую высоту блока

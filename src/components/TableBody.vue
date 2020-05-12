@@ -40,7 +40,7 @@ export default {
     this.generateDates();
     this.generateTimes();
     this.fetchTasks();
-    const topY = parseInt(getTop(this.moment().unix()), 0);
+    const topY = getTop(this.moment().unix(), false);
     if (topY > 480) {
       this.$refs.scrollDiv.scrollTop = topY - 200;
     }

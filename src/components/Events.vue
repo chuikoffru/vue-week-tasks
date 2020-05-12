@@ -12,7 +12,6 @@
           @dragover.prevent
           @dragstart="startDrag($event, indexTask)"
           @dragend.prevent="stopDrag($event, indexTask)"
-          @mousewheel.prevent="wheelMove($event, indexTask)"
           >
           <div class="time">{{task.startDate.format('HH:mm')}}</div>
           <div class="text" @dragstart.prevent @selectstart.prevent>{{task.title}}</div>
@@ -47,9 +46,6 @@ export default {
         this.x = 0;
         this.y = 0;
       }
-    },
-    wheelMove(evt, index) {
-      this.$store.dispatch('changeDuration', { index, y: -evt.deltaY }).then(() => this.$forceUpdate());
     },
   },
 };

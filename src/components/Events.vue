@@ -8,15 +8,14 @@
             'top': task.top,
             'height': task.height
           }"
-          draggable="true"
+          draggable="dragging"
           @dragover.prevent
           @dragstart="startDrag($event, indexTask)"
           @dragend.prevent="stopDrag($event, indexTask)"
           @mousewheel.prevent="wheelMove($event, indexTask)"
           >
           <div class="time">{{task.startDate.format('HH:mm')}}</div>
-          <div class="text" @selectstart.prevent>{{task.title}}</div>
-          <div class="size" @mousedown.stop="reduceTime($event, indexTask)"></div>
+          <div class="text" @dragstart.prevent @selectstart.prevent>{{task.title}}</div>
         </div>
       </div>
   </div>
@@ -28,6 +27,7 @@ export default {
   data: () => ({
     y: 0,
     x: 0,
+    dragging: false,
   }),
   methods: {
     isSameDate(day, start) {
@@ -38,7 +38,6 @@ export default {
       evt.dataTransfer.effectAllowed = 'move';
       this.x = evt.x;
       this.y = evt.y;
-      console.log('START', evt);
     },
     stopDrag(evt, index) {
       const x = this.x - evt.x;
@@ -48,13 +47,9 @@ export default {
         this.x = 0;
         this.y = 0;
       }
-      console.log('STOP', evt);
     },
     wheelMove(evt, index) {
-      this.$store.dispatch('taskMove', { index, y: -evt.deltaY });
-    },
-    reduceTime(evt, index) {
-      console.log('evt, index', evt, index);
+      this.$store.dispatch('changeDuration', { index, y: -evt.deltaY }).then(() => this.$forceUpdate());
     },
   },
 };
@@ -86,11 +81,4 @@ export default {
       margin-bottom: 5px
     .text
       flex: 1 0 auto
-    .size
-      width: 100%
-      height: 5px
-      background-color: green
-      flex: 0 0 auto
-      cursor: row-resize
-      opacity: .2
 </style>

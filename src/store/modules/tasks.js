@@ -56,6 +56,25 @@ export default {
       });
       dispatch('generateDates', null, { root: true });
     },
+    changeDuration({ commit, state }, payload) {
+      console.log('payload', payload);
+      const { startDate, endDate } = state.tasks[payload.index];
+      const newEnd = Object.create(endDate);
+      newEnd.add(-payload.y, 'minutes');
+      const allowHeight = parseInt(getHeight(startDate.unix(), newEnd.unix()), 0);
+      if (allowHeight > 60) {
+        endDate.add(-payload.y, 'minutes');
+        commit('updateOne', {
+          index: payload.index,
+          task: {
+            ...state.tasks[payload.index],
+            endDate,
+            height: getHeight(startDate.unix(), endDate.unix()),
+            key: startDate + endDate,
+          },
+        });
+      }
+    },
   },
   getters: {
     getTasks(state) {

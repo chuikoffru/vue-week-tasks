@@ -33,13 +33,6 @@ export default {
     isSameDate(day, start) {
       return this.moment(day).isSame(start, 'day');
     },
-    /* drag(evt) {
-      if (evt.pageY < 246) {
-        console.log(evt);
-        evt.preventDefault();
-        this.$refs.event[0].draggable = false;
-      }
-    }, */
     startDrag(evt) {
       evt.dataTransfer.dropEffect = 'move';
       evt.dataTransfer.effectAllowed = 'move';

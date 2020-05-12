@@ -56,10 +56,18 @@ export default {
         startDate.subtract(diff, 'minutes');
         endDate.subtract(diff, 'minutes');
       }
-      // Если курсор ушел влево/право добавляем/убираем один день
+      // Получаем первый и последний день недели
+      const startOfWeek = parseInt(moment().startOf('isoWeek').format('D'), 0);
+      const endOfWeek = parseInt(moment().endOf('isoWeek').format('D'), 0);
+      // Считаем сколько дней прошел курсор
       const countDays = Math.round(payload.x / payload.w);
-      startDate.add(-countDays, 'days');
-      endDate.add(-countDays, 'days');
+      // Получаем текущий день недели и вычитаем пройденное количество дней
+      const currentDay = parseInt(startDate.format('D'), 0) - countDays;
+      // Если движение прошло в рамках недели, то добавляем количество дней
+      if (currentDay >= startOfWeek && currentDay <= endOfWeek) {
+        startDate.add(-countDays, 'days');
+        endDate.add(-countDays, 'days');
+      }
       // Если день уходит за границы недели устанавливаем крайний день недели
       commit('updateOne', {
         index: payload.index,

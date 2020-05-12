@@ -9,6 +9,7 @@
             'height': task.height
           }"
           draggable="true"
+          ref="event"
           @dragover.prevent
           @dragstart="startDrag($event, indexTask)"
           @dragend.prevent="stopDrag($event, indexTask)"
@@ -32,6 +33,13 @@ export default {
     isSameDate(day, start) {
       return this.moment(day).isSame(start, 'day');
     },
+    /* drag(evt) {
+      if (evt.pageY < 246) {
+        console.log(evt);
+        evt.preventDefault();
+        this.$refs.event[0].draggable = false;
+      }
+    }, */
     startDrag(evt) {
       evt.dataTransfer.dropEffect = 'move';
       evt.dataTransfer.effectAllowed = 'move';
@@ -41,8 +49,11 @@ export default {
     stopDrag(evt, index) {
       const x = this.x - evt.x;
       const y = this.y - evt.y;
+      const w = evt.target.offsetWidth;
       if (x !== 0 || y !== 0) {
-        this.$store.dispatch('taskMove', { index, y, x });
+        this.$store.dispatch('taskMove', {
+          index, y, x, w,
+        });
         this.x = 0;
         this.y = 0;
       }

@@ -33,16 +33,28 @@ export default {
     },
     taskMove({ commit, state, dispatch }, payload) {
       console.log('payload', payload);
+      // Получаем данные задачи
       const { startDate, endDate } = state.tasks[payload.index];
-      startDate.add(-payload.y, 'minutes');
-      endDate.add(-payload.y, 'minutes');
-      if (payload.x > 40) {
-        startDate.subtract(24, 'hours');
-        endDate.subtract(24, 'hours');
-      } else if (payload.x < -40) {
-        startDate.add(24, 'hours');
-        endDate.add(24, 'hours');
+      // Получаем текущую высоту блока
+      const topY = getTop(startDate.unix(), false);
+      const height = getHeight(startDate.unix(), endDate.unix(), false);
+      const absoluteTop = topY + height;
+      if (absoluteTop > 1440) {
+        console.log('absoluteTop', absoluteTop);
       }
+      // Если текущая высота меньше пройденного расстояния, устанавливаем на ноль час и минуту
+      if (topY > payload.y) {
+        // Добавляем количество минут в зависимости от пройденного расстояния курсора
+        startDate.add(-payload.y, 'minutes');
+        endDate.add(-payload.y, 'minutes');
+      } else {
+        startDate.hour(0).minute(0);
+        endDate.subtract(topY, 'minutes');
+      }
+      // Если курсор ушел влево/право добавляем/убираем один день
+      const countDays = Math.round(payload.x / payload.w);
+      startDate.add(-countDays, 'days');
+      endDate.add(-countDays, 'days');
       commit('updateOne', {
         index: payload.index,
         task: {

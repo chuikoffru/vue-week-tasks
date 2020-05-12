@@ -1,16 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 
-const getTop = (s) => {
-  const hoursToMinutes = parseInt(moment.unix(s).format('H'), 0) * 60;
-  const minutes = parseInt(moment.unix(s).format('m'), 0);
-  return `${hoursToMinutes + minutes}px`;
-};
-
-const getHeight = (s, e) => {
-  const minutes = moment.unix(e).diff(moment.unix(s), 'minutes');
-  return `${minutes}px`;
-};
+import { getTop, getHeight } from '../../libs/getPx';
 
 export default {
   strict: true,

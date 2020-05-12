@@ -8,14 +8,14 @@
             'top': task.top,
             'height': task.height
           }"
-          @selectstart.prevent
-          @mousedown="startDrag($event, indexTask)"
-          @mouseup="stopDrag($event, indexTask)"
-          @mousemove="moveDrag($event, indexTask)"
+          draggable="true"
+          @dragover.prevent
+          @dragstart="startDrag($event, indexTask)"
+          @dragend.prevent="stopDrag($event, indexTask)"
           @mousewheel.prevent="wheelMove($event, indexTask)"
           >
           <div class="time">{{task.startDate.format('HH:mm')}}</div>
-          <div class="text">{{task.title}}</div>
+          <div class="text" @selectstart.prevent>{{task.title}}</div>
           <div class="size" @mousedown.stop="reduceTime($event, indexTask)"></div>
         </div>
       </div>
@@ -28,32 +28,27 @@ export default {
   data: () => ({
     y: 0,
     x: 0,
-    dragging: false,
   }),
   methods: {
     isSameDate(day, start) {
       return this.moment(day).isSame(start, 'day');
     },
     startDrag(evt) {
-      this.dragging = true;
-      this.x = evt.offsetX;
-      this.y = evt.offsetY;
-      console.log('START');
+      evt.dataTransfer.dropEffect = 'move';
+      evt.dataTransfer.effectAllowed = 'move';
+      this.x = evt.x;
+      this.y = evt.y;
+      console.log('START', evt);
     },
-    stopDrag() {
-      this.dragging = false;
-      this.x = 0;
-      this.y = 0;
-      console.log('STOP');
-    },
-    moveDrag(evt, index) {
-      if (this.dragging) {
-        const x = this.x - evt.offsetX;
-        const y = this.y - evt.offsetY;
-        if (x !== 0 && y !== 0) {
-          this.$store.dispatch('taskMove', { index, y, x });
-        }
+    stopDrag(evt, index) {
+      const x = this.x - evt.x;
+      const y = this.y - evt.y;
+      if (x !== 0 || y !== 0) {
+        this.$store.dispatch('taskMove', { index, y, x });
+        this.x = 0;
+        this.y = 0;
       }
+      console.log('STOP', evt);
     },
     wheelMove(evt, index) {
       this.$store.dispatch('taskMove', { index, y: -evt.deltaY });

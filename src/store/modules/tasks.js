@@ -36,25 +36,31 @@ export default {
       // Получаем данные задачи
       const { startDate, endDate } = state.tasks[payload.index];
       // Получаем текущую высоту блока
-      const topY = getTop(startDate.unix(), false);
-      const height = getHeight(startDate.unix(), endDate.unix(), false);
-      const absoluteTop = topY + height;
-      if (absoluteTop > 1440) {
-        console.log('absoluteTop', absoluteTop);
-      }
-      // Если текущая высота меньше пройденного расстояния, устанавливаем на ноль час и минуту
+      let topY = getTop(startDate.unix(), false);
       if (topY > payload.y) {
         // Добавляем количество минут в зависимости от пройденного расстояния курсора
         startDate.add(-payload.y, 'minutes');
         endDate.add(-payload.y, 'minutes');
       } else {
+        // Если текущая высота меньше пройденного расстояния, устанавливаем на ноль час и минуту
         startDate.hour(0).minute(0);
         endDate.subtract(topY, 'minutes');
+      }
+      // Сбрасываем значение высшей планки
+      topY = getTop(startDate.unix(), false);
+      // Если нижняя граница выходит за край, сбрасываем значения на разницу в наложении
+      const height = getHeight(startDate.unix(), endDate.unix(), false);
+      const bottomLine = topY + height;
+      if (bottomLine > 1440) {
+        const diff = bottomLine - 1440;
+        startDate.subtract(diff, 'minutes');
+        endDate.subtract(diff, 'minutes');
       }
       // Если курсор ушел влево/право добавляем/убираем один день
       const countDays = Math.round(payload.x / payload.w);
       startDate.add(-countDays, 'days');
       endDate.add(-countDays, 'days');
+      // Если день уходит за границы недели устанавливаем крайний день недели
       commit('updateOne', {
         index: payload.index,
         task: {

@@ -1,16 +1,6 @@
 [
-  { "title": "Заголовок 3", "startDate": 1589358671, "endDate": 1589368671 },
-  { "title": "Заголовок 4", "startDate": 1589468671, "endDate": 1589478671 },
-  { "title": "Заголовок 5", "startDate": 1589578671, "endDate": 1589588671 },
-  { "title": "Заголовок 6", "startDate": 1589688671, "endDate": 1589698671 },
-  { "title": "Заголовок 1", "startDate": 1589788800, "endDate": 1589792400 },
-  { "title": "Заголовок 2", "startDate": 1589804200, "endDate": 1589809800 },
-  { "title": "Заголовок 3", "startDate": 1589882400, "endDate": 1589886000 },
-  { "title": "Заголовок 4", "startDate": 1589904000, "endDate": 1589911200 },
-  { "title": "Заголовок 5", "startDate": 1589970000, "endDate": 1589973600 },
-  { "title": "Заголовок 6", "startDate": 1590001200, "endDate": 1590005000 },
-  { "title": "Заголовок 3", "startDate": 1590062400, "endDate": 1590066000 },
-  { "title": "Заголовок 4", "startDate": 1590084000, "endDate": 1590091200 },
-  { "title": "Заголовок 5", "startDate": 1590133000, "endDate": 1590140000 },
-  { "title": "Заголовок 6", "startDate": 1590224400, "endDate": 1590227600 }
+  { "title": "Заголовок 1", "startDate": 1590387299, "endDate": 1590390899 },
+  { "title": "Заголовок 2", "startDate": 1590477299, "endDate": 1590480899 },
+  { "title": "Заголовок 3", "startDate": 1590567299, "endDate": 1590570899 },
+  { "title": "Заголовок 4", "startDate": 1590657299, "endDate": 1590660899 }
 ]
